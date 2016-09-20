@@ -32,13 +32,31 @@ $(document).ready(function(){
 	if (isAjaxMocked) {
 		$.mockJSON.data.KEY = ['关键词1', '关键词2', '关键词3'];
 		$.mockjax({
-			url: '/api/search'+'*',
+			url: '/api/search',
+			data: {
+				type:'java'
+			},
 			status: 200,
 			responseTime: 750,
 			responseText: $.mockJSON.generateFromTemplate({//使用mockJSON返回json数据
 				"suggest|3-5": [{ // 随机返回3-5条suggest数据
 					"id|+1": 1, // id递增
-					"title": "@KEY ", // 从$.mockJSON.data.KEY中随机选择
+					"title": "@KEY"+"java", // 从$.mockJSON.data.KEY中随机选择
+				}]
+			})
+		});
+
+		$.mockjax({
+			url: '/api/search',
+			data: {
+				type:'php'
+			},
+			status: 200,
+			responseTime: 750,
+			responseText: $.mockJSON.generateFromTemplate({//使用mockJSON返回json数据
+				"suggest|3-5": [{ // 随机返回3-5条suggest数据
+					"id|+1": 1, // id递增
+					"title": "@KEY"+"php", // 从$.mockJSON.data.KEY中随机选择
 				}]
 			})
 		});
@@ -47,10 +65,10 @@ $(document).ready(function(){
 	// 输入框键入值，触发查询
 	$('#text').keyup(function(){
 		var textValue = $('#text').val();
-
 		$.ajax({
-	      url: '/api/search?q='+textValue,
+	      url: '/api/search',
 	      type: 'GET',
+				data: {"type": textValue},
 	      success: function (data) {
 					data = data.suggest;
 					var html = '';
