@@ -13,7 +13,7 @@
 		<div class='box'>
 			<div class='logo'>搜索</div>
 			<form id='search-form'>
-				<input type='text' class='text' id='text'>
+				<input type='text' class='text' id='text' autocomplete='off'>
 				<input type='submit' value='' class='btn'>
 			</form>
 		</div>
@@ -30,33 +30,15 @@ $(document).ready(function(){
 
 	var isAjaxMocked = true;
 	if (isAjaxMocked) {
-		$.mockJSON.data.KEY = ['关键词1', '关键词2', '关键词3'];
+		$.mockJSON.data.KEY = ['这是mock数据', '这是mock数据', '这是mock数据'];
 		$.mockjax({
-			url: '/api/search',
-			data: {
-				type:'java'
-			},
+			url: '/api/search*',
 			status: 200,
 			responseTime: 750,
 			responseText: $.mockJSON.generateFromTemplate({//使用mockJSON返回json数据
 				"suggest|3-5": [{ // 随机返回3-5条suggest数据
 					"id|+1": 1, // id递增
-					"title": "@KEY"+"java", // 从$.mockJSON.data.KEY中随机选择
-				}]
-			})
-		});
-
-		$.mockjax({
-			url: '/api/search',
-			data: {
-				type:'php'
-			},
-			status: 200,
-			responseTime: 750,
-			responseText: $.mockJSON.generateFromTemplate({//使用mockJSON返回json数据
-				"suggest|3-5": [{ // 随机返回3-5条suggest数据
-					"id|+1": 1, // id递增
-					"title": "@KEY"+"php", // 从$.mockJSON.data.KEY中随机选择
+					"title": "@KEY", // 从$.mockJSON.data.KEY中随机选择
 				}]
 			})
 		});
@@ -66,9 +48,8 @@ $(document).ready(function(){
 	$('#text').keyup(function(){
 		var textValue = $('#text').val();
 		$.ajax({
-	      url: '/api/search',
+	      url: '/api/search?p=' + textValue,
 	      type: 'GET',
-				data: {"type": textValue},
 	      success: function (data) {
 					data = data.suggest;
 					var html = '';
